@@ -1,12 +1,14 @@
-# README #
+# support desk system #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+This is a mern stack support ticketing system 
 
-### What is this repository for? ###
+### Tech stack ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* MongoDB
+* ReactJS
+* NodeJS-Express
+* Redux-Toolkit
+* React-Router
 
 ### How do I get set up? ###
 
