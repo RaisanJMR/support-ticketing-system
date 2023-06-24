@@ -44,8 +44,6 @@ const getSingleTicket = asyncHandler(async (req, res) => {
 
 const createTickets = asyncHandler(async (req, res) => {
   const { product, description } = req.body
-  console.log(product)
-  console.log(description)
   if (!product || !description) {
     res.status(400)
     throw new Error('Please add a product and a description')

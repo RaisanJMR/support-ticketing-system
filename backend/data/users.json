@@ -1,0 +1,32 @@
+[
+  {
+    "name": "John",
+    "email": "john@example.com",
+    "password": "123456",
+    "isadmin": false
+  },
+  {
+    "name": "Jane",
+    "email": "jane@example.com",
+    "password": "123456",
+    "isadmin": false
+  },
+  {
+    "name": "Robert",
+    "email": "robertjohnson@example.com",
+    "password": "123456",
+    "isadmin": true
+  },
+  {
+    "name": "Sarah",
+    "email": "sarah@example.com",
+    "password": "123456",
+    "isadmin": false
+  },
+  {
+    "name": "David",
+    "email": "david@example.com",
+    "password": "123456",
+    "isadmin": true
+  }
+]

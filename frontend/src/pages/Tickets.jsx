@@ -9,7 +9,6 @@ function Tickets() {
   const { tickets, isLoading, isSuccess } = useSelector(
     (state) => state.tickets
   )
-  console.log(tickets,'ticketsssss')
   const dispatch = useDispatch()
 
   useEffect(() => {

@@ -35,7 +35,6 @@ const getTicket = async (ticketId, token) => {
     },
   }
   const response = await axios.get(API_URL + ticketId, config)
-  console.log('ticket response from get ticket', response)
   return response.data
 }
 // Close Ticket

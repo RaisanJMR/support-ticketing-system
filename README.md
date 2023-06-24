@@ -34,6 +34,6 @@ JWT_SECRET=your jwt secret
 
 ### Who do I talk to? ###
 
-* Repo owner [https://www.raisanjmr.com](https://www.raisanjmr.com)
+* Repo owner [https://www.raisanjmr.in](https://www.raisanjmr.in)
 * view live [https://jmr-support-desk.herokuapp.com/]( https://jmr-support-desk.herokuapp.com/)
 

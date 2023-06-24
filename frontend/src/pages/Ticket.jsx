@@ -47,7 +47,6 @@ function Ticket() {
 
   const params = useParams()
   const { ticketId } = useParams()
-  console.log(ticketId)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -57,7 +56,7 @@ function Ticket() {
     }
     dispatch(getTicket(ticketId))
     dispatch(getNotes(ticketId))
-  }, [isError, message, ticketId])
+  }, [isError, message, ticketId, dispatch])
 
   const onTicketClose = () => {
     dispatch(closeTicket(ticketId))
