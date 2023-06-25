@@ -1,16 +1,16 @@
-# support desk system #
+# support desk system
 
-This is a mern stack support ticketing system 
+This is a mern stack support ticketing system
 
-### Tech stack ###
+### Tech stack
 
-* MongoDB
-* ReactJS
-* NodeJS-Express
-* Redux-Toolkit
-* React-Router
+- MongoDB
+- ReactJS
+- NodeJS-Express
+- Redux-Toolkit
+- React-Router
 
-### How do I get set up? ###
+### How do I get set up?
 
 ```
 git clone <url>
@@ -18,9 +18,9 @@ git clone <url>
 npm install
 ```
 
-### Contribution guidelines ###
+### Contribution guidelines
 
-* add  ```.env``` file in root and add the following
+- add `.env` file in root and add the following
 
 ```
 NODE_ENV=development || production
@@ -32,8 +32,7 @@ MONGO_URI=your mongo uri
 JWT_SECRET=your jwt secret
 ```
 
-### Who do I talk to? ###
+### Who do I talk to?
 
-* Repo owner [https://www.raisanjmr.in](https://www.raisanjmr.in)
-* view live [https://jmr-support-desk.herokuapp.com/]( https://jmr-support-desk.herokuapp.com/)
-
+- Repo owner [https://www.raisanjmr.in](https://www.raisanjmr.in)
+- view live [https://support-desk-0azr.onrender.com](https://support-desk-0azr.onrender.com)
