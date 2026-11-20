@@ -1,10 +1,15 @@
 import { useState, useEffect } from 'react'
-import { useSelector, dispatch, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { createTicket, reset } from '../features/tickets/ticketSlice'
-import Spinner from '../components/Spinner'
-import { BackButton } from '../components/BackButton'
+import PageHeader from '../components/ui/PageHeader'
+import Card from '../components/ui/Card'
+import Field from '../components/ui/Field'
+import Button from '../components/ui/Button'
+import ProductIcon from '../components/ProductIcon'
+import { PRODUCTS } from '../utils/tickets'
+import { getInitials } from '../utils/format'
 
 function NewTicket() {
   const { user } = useSelector((state) => state.auth)
@@ -12,82 +17,106 @@ function NewTicket() {
     (state) => state.tickets
   )
 
-  const [name] = useState(user.name)
-  const [email] = useState(user.email)
   const [product, setProduct] = useState('iPhone')
-  const [description, setDescription] = useState(user.description)
+  const [description, setDescription] = useState('')
+  const [submitted, setSubmitted] = useState(false)
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   useEffect(() => {
+    dispatch(reset())
+  }, [dispatch])
+
+  useEffect(() => {
+    if (!submitted) return
     if (isError) {
       toast.error(message)
+      setSubmitted(false)
+      dispatch(reset())
     }
     if (isSuccess) {
+      toast.success('Your request has been submitted')
       dispatch(reset())
       navigate('/tickets')
     }
-    dispatch(reset())
-  }, [dispatch, isError, isSuccess, navigate, message])
+  }, [submitted, dispatch, isError, isSuccess, navigate, message])
+
+  const submitting = submitted && isLoading
 
   const onSubmit = (e) => {
     e.preventDefault()
-    dispatch(createTicket({ product, description }))
+    if (!description.trim()) return
+    setSubmitted(true)
+    dispatch(createTicket({ product, description: description.trim() }))
   }
 
-  if (isLoading) {
-    return <Spinner />
-  }
   return (
-    <>
-      <BackButton url='/' />
-      <section className='heading'>
-        <h1>create new ticket</h1>
-        <p>please fill out the form below</p>
-      </section>
+    <div className='narrow'>
+      <PageHeader
+        back={{ to: '/', label: 'Home' }}
+        title='New request'
+        subtitle='Tell us what is going on and the support team will pick it up.'
+      />
 
-      <section className='form'>
-        <div className='form-group'>
-          <label htmlFor='name'>Customer Name</label>
-          <input type='text' className='form-control' value={name} disabled />
-        </div>
-        <div className='form-group'>
-          <label htmlFor='email'>Customer Email</label>
-          <input type='text' className='form-control' value={email} disabled />
+      <Card as='form' onSubmit={onSubmit}>
+        <fieldset className='fieldset' disabled={submitting}>
+          <legend className='fieldset-legend'>Which product needs help?</legend>
+          <div className='product-grid'>
+            {PRODUCTS.map((item) => (
+              <label key={item} className='product-option'>
+                <input
+                  type='radio'
+                  name='product'
+                  value={item}
+                  checked={product === item}
+                  onChange={(e) => setProduct(e.target.value)}
+                />
+                <span className='product-option-body'>
+                  <ProductIcon product={item} />
+                  <span>{item}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <Field
+          as='textarea'
+          id='description'
+          name='description'
+          label='Describe the issue'
+          hint='Include what happened, when it started, and anything you have already tried.'
+          placeholder='For example: my iPhone restarts every time I open the camera.'
+          rows={6}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          disabled={submitting}
+          required
+        />
+
+        <div className='submitter'>
+          <span className='avatar' aria-hidden='true'>
+            {getInitials(user.name)}
+          </span>
+          <span className='submitter-text'>
+            Submitting as <strong>{user.name}</strong> · {user.email}
+          </span>
         </div>
 
-        <form onSubmit={onSubmit}>
-          <div className='form-group'>
-            <label htmlFor='product'>Product</label>
-            <select
-              name='product'
-              id='product'
-              value={product}
-              onChange={(e) => setProduct(e.target.value)}>
-              <option value='iPhone'>iPhone</option>
-              <option value='iPad'>iPad</option>
-              <option value='Macbook Pro'>Macbook Pro</option>
-              <option value='iMac'>iMac</option>
-              <option value='AirTag'>AirTag</option>
-            </select>
-          </div>
-          <div className='form-group'>
-            <label htmlFor='description'>Description of Issue</label>
-            <textarea
-              name='description'
-              id='description'
-              className='form-control'
-              placeholder='description'
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}></textarea>
-          </div>
-          <div className='form-group'>
-            <button className='btn btn-block'>Submit</button>
-          </div>
-        </form>
-      </section>
-    </>
+        <div className='form-actions'>
+          <Button to='/' variant='secondary'>
+            Cancel
+          </Button>
+          <Button
+            type='submit'
+            loading={submitting}
+            disabled={!description.trim()}>
+            Submit request
+          </Button>
+        </div>
+      </Card>
+    </div>
   )
 }
 

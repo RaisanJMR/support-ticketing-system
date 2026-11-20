@@ -1,22 +1,28 @@
-import { useSelector } from 'react-redux'
+import { formatDate, formatRelative } from '../utils/format'
 
-function NoteItem({ note }) {
-  const { user } = useSelector((state) => state.auth)
+function NoteItem({ note, currentUserId }) {
+  const author = note.user && typeof note.user === 'object' ? note.user : null
+  const authorId = author ? author._id : note.user
+  const isMine = authorId === currentUserId
+  const authorName = isMine
+    ? 'You'
+    : (author && author.name) || (note.isStaff ? 'Support team' : 'Customer')
+
+  const classes = ['note', isMine && 'note-mine', note.isStaff && 'note-staff']
+    .filter(Boolean)
+    .join(' ')
+
   return (
-    <div
-      className='note'
-      style={{
-        backgroundColor: note.isStaff ? 'rgba(0,0,0,0.7)' : '#ffffff',
-        color: note.isStaff ? '#ffffff' : '#000000',
-      }}>
-      <h4>
-        Note from {note.isStaff ? <span>Staff</span> : <span>{user.name}</span>}
-      </h4>
-      <p>{note.text}</p>
-      <div className='note-date'>
-        {new Date(note.createdAt).toLocaleString('en-US')}
+    <li className={classes}>
+      <div className='note-meta'>
+        <span className='note-author'>{authorName}</span>
+        {note.isStaff && <span className='badge badge-staff'>Staff</span>}
+        <time dateTime={note.createdAt} title={formatDate(note.createdAt)}>
+          {formatRelative(note.createdAt)}
+        </time>
       </div>
-    </div>
+      <p className='note-bubble'>{note.text}</p>
+    </li>
   )
 }
 

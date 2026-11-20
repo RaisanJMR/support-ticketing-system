@@ -57,6 +57,8 @@ export const noteSlice = createSlice({
     builder
       .addCase(getNotes.pending, (state) => {
         state.isLoading = true
+        state.isError = false
+        state.message = ''
       })
       .addCase(getNotes.fulfilled, (state, action) => {
         state.isLoading = false

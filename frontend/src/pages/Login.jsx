@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { AiOutlineUser, AiOutlineLogin } from 'react-icons/ai'
+import { Link, useNavigate } from 'react-router-dom'
+import { IoChatbubblesOutline } from 'react-icons/io5'
 import { toast } from 'react-toastify'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { login, reset } from '../features/auth/authSlice'
-import Spinner from '../components/Spinner'
+import Card from '../components/ui/Card'
+import Field from '../components/ui/Field'
+import PasswordField from '../components/ui/PasswordField'
+import Button from '../components/ui/Button'
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -48,51 +51,53 @@ function Login() {
     dispatch(login(userData))
   }
 
-  if (isLoading) {
-    return <Spinner/>
-  }
-
   return (
-    <>
-      <section className='heading'>
-        <h1>
-          <AiOutlineLogin /> Login
-        </h1>
-        <p>Please log in to get support</p>
-      </section>
+    <div className='auth-page'>
+      <Card className='auth-card'>
+        <div className='auth-header'>
+          <span className='auth-icon' aria-hidden='true'>
+            <IoChatbubblesOutline />
+          </span>
+          <h1 className='auth-title'>Sign in</h1>
+          <p className='auth-subtitle'>
+            Open and track your support requests.
+          </p>
+        </div>
 
-      <section className='form'>
-        <form onSubmit={onSubmit}>
-          <div className='form-group'>
-            <input
-              type='email'
-              className='form-control'
-              id='email'
-              name='email'
-              value={email}
-              onChange={onChange}
-              placeholder='Enter your email'
-              required
-            />
-          </div>
-          <div className='form-group'>
-            <input
-              type='password'
-              className='form-control'
-              id='password'
-              name='password'
-              value={password}
-              onChange={onChange}
-              placeholder='Enter your password'
-              required
-            />
-          </div>
-          <div className='form-group'>
-            <button className='btn btn-block'>Submit</button>
-          </div>
+        <form className='auth-form' onSubmit={onSubmit}>
+          <Field
+            id='email'
+            name='email'
+            type='email'
+            label='Email'
+            autoComplete='email'
+            value={email}
+            onChange={onChange}
+            placeholder='name@example.com'
+            disabled={isLoading}
+            required
+          />
+          <PasswordField
+            id='password'
+            name='password'
+            label='Password'
+            autoComplete='current-password'
+            value={password}
+            onChange={onChange}
+            placeholder='Your password'
+            disabled={isLoading}
+            required
+          />
+          <Button type='submit' size='lg' block loading={isLoading}>
+            Sign in
+          </Button>
         </form>
-      </section>
-    </>
+
+        <p className='auth-footer'>
+          New here? <Link to='/register'>Create an account</Link>
+        </p>
+      </Card>
+    </div>
   )
 }
 

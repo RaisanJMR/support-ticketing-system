@@ -37,27 +37,27 @@ const getTicket = async (ticketId, token) => {
   const response = await axios.get(API_URL + ticketId, config)
   return response.data
 }
-// Close Ticket
-const closeTicket = async (ticketId, token) => {
-  console.log(ticketId)
+// Update ticket status
+const updateTicket = async (ticketId, ticketData, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await axios.put(
-    API_URL + ticketId,
-    { status: 'closed' },
-    config
-  )
-  console.log('ticket response from close ticket', response)
+  const response = await axios.put(API_URL + ticketId, ticketData, config)
   return response.data
+}
+
+// Close Ticket
+const closeTicket = async (ticketId, token) => {
+  return updateTicket(ticketId, { status: 'closed' }, token)
 }
 
 const ticketService = {
   createTicket,
   getTickets,
   getTicket,
+  updateTicket,
   closeTicket,
 }
 

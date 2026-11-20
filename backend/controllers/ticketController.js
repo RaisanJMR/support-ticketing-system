@@ -12,7 +12,9 @@ const getTickets = asyncHandler(async (req, res) => {
     res.status(401)
     throw new Error('User not found')
   }
-  const tickets = await Ticket.find({ user: req.user.id })
+  const tickets = req.user.isAdmin
+    ? await Ticket.find().populate('user', 'name email')
+    : await Ticket.find({ user: req.user.id })
   res.status(200).json(tickets)
 })
 
@@ -31,9 +33,12 @@ const getSingleTicket = asyncHandler(async (req, res) => {
     res.status(404)
     throw new Error('Ticket not found')
   }
-  if (ticket.user.toString() !== req.user.id) {
-    res.status(404)
-    throw new Error('Not Authorized')
+  if (ticket.user.toString() !== req.user.id && !req.user.isAdmin) {
+    res.status(403)
+    throw new Error('Not authorized')
+  }
+  if (req.user.isAdmin) {
+    await ticket.populate('user', 'name email')
   }
   res.status(200).json(ticket)
 })
@@ -108,15 +113,31 @@ const updateTicket = asyncHandler(async (req, res) => {
     throw new Error('Ticket not found')
   }
 
-  if (ticket.user.toString() !== req.user.id) {
-    res.status(404)
-    throw new Error('Not Authorized')
+  const isOwner = ticket.user.toString() === req.user.id
+  if (!isOwner && !req.user.isAdmin) {
+    res.status(403)
+    throw new Error('Not authorized')
   }
+
+  const { status } = req.body
+  const allowedStatuses = ['new', 'open', 'closed']
+  if (!allowedStatuses.includes(status)) {
+    res.status(400)
+    throw new Error('Please provide a valid status')
+  }
+  if (isOwner && !req.user.isAdmin && status !== 'closed') {
+    res.status(403)
+    throw new Error('Not authorized to set this status')
+  }
+
   const updatedTicket = await Ticket.findByIdAndUpdate(
     req.params.id,
-    req.body,
+    { status },
     { new: true }
   )
+  if (req.user.isAdmin) {
+    await updatedTicket.populate('user', 'name email')
+  }
 
   res.status(200).json(updatedTicket)
 

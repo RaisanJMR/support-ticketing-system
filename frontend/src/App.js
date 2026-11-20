@@ -14,25 +14,38 @@ function App() {
   return (
     <>
       <Router>
-        <div className='container'>
-          <Header />
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/register' element={<Register />} />
-            <Route path='/new-ticket' element={<PrivateRoute />}>
-              <Route path='/new-ticket' element={<NewTicket />} />
-            </Route>
-            <Route path='/tickets' element={<PrivateRoute />}>
-              <Route path='/tickets' element={<Tickets />} />
-            </Route>
-            <Route path='/ticket/:ticketId' element={<PrivateRoute />}>
-              <Route path='/ticket/:ticketId' element={<Ticket />} />
-            </Route>
-          </Routes>
-        </div>
+        <a href='#main' className='skip-link'>
+          Skip to content
+        </a>
+        <Header />
+        <main id='main' className='main' tabIndex={-1}>
+          <div className='container'>
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='/login' element={<Login />} />
+              <Route path='/register' element={<Register />} />
+              <Route path='/new-ticket' element={<PrivateRoute />}>
+                <Route path='/new-ticket' element={<NewTicket />} />
+              </Route>
+              <Route path='/tickets' element={<PrivateRoute />}>
+                <Route path='/tickets' element={<Tickets />} />
+              </Route>
+              <Route path='/ticket/:ticketId' element={<PrivateRoute />}>
+                <Route path='/ticket/:ticketId' element={<Ticket />} />
+              </Route>
+            </Routes>
+          </div>
+        </main>
       </Router>
-      <ToastContainer />
+      <ToastContainer
+        position='bottom-center'
+        autoClose={3000}
+        hideProgressBar
+        closeButton={false}
+        newestOnTop
+        pauseOnFocusLoss={false}
+        draggable={false}
+      />
     </>
   )
 }

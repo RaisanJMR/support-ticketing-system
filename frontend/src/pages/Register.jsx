@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { AiOutlineUser } from 'react-icons/ai'
+import { Link, useNavigate } from 'react-router-dom'
+import { IoPersonAddOutline } from 'react-icons/io5'
 import { toast } from 'react-toastify'
 import { useSelector, useDispatch } from 'react-redux'
 import { register, reset } from '../features/auth/authSlice'
-import Spinner from '../components/Spinner'
+import Card from '../components/ui/Card'
+import Field from '../components/ui/Field'
+import PasswordField from '../components/ui/PasswordField'
+import Button from '../components/ui/Button'
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -34,6 +37,8 @@ function Register() {
     dispatch(reset())
   }, [dispatch, navigate, isError, isSuccess, user, message])
 
+  const passwordsMismatch = password2.length > 0 && password !== password2
+
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -44,86 +49,87 @@ function Register() {
   const onSubmit = (e) => {
     e.preventDefault()
     if (password !== password2) {
-      toast.error('Passwords do not match')
-    } else {
-      const userData = {
-        name,
-        email,
-        password,
-      }
-      dispatch(register(userData))
+      return
     }
-  }
-
-  if (isLoading) {
-    return <Spinner />
+    const userData = {
+      name,
+      email,
+      password,
+    }
+    dispatch(register(userData))
   }
 
   return (
-    <>
-      <section className='heading'>
-        <h1>
-          <AiOutlineUser /> Register
-        </h1>
-        <p>Please create an account</p>
-      </section>
+    <div className='auth-page'>
+      <Card className='auth-card'>
+        <div className='auth-header'>
+          <span className='auth-icon' aria-hidden='true'>
+            <IoPersonAddOutline />
+          </span>
+          <h1 className='auth-title'>Create account</h1>
+          <p className='auth-subtitle'>
+            One account for all of your support requests.
+          </p>
+        </div>
 
-      <section className='form'>
-        <form onSubmit={onSubmit}>
-          <div className='form-group'>
-            <input
-              type='text'
-              className='form-control'
-              id='name'
-              name='name'
-              value={name}
-              onChange={onChange}
-              placeholder='Enter your name'
-              required
-            />
-          </div>
-          <div className='form-group'>
-            <input
-              type='email'
-              className='form-control'
-              id='email'
-              name='email'
-              value={email}
-              onChange={onChange}
-              placeholder='Enter your email'
-              required
-            />
-          </div>
-          <div className='form-group'>
-            <input
-              type='password'
-              className='form-control'
-              id='password'
-              name='password'
-              value={password}
-              onChange={onChange}
-              placeholder='Enter your password'
-              required
-            />
-          </div>
-          <div className='form-group'>
-            <input
-              type='password'
-              className='form-control'
-              id='password2'
-              name='password2'
-              value={password2}
-              onChange={onChange}
-              placeholder='Re-type above password'
-              required
-            />
-          </div>
-          <div className='form-group'>
-            <button className='btn btn-block'>Submit</button>
-          </div>
+        <form className='auth-form' onSubmit={onSubmit}>
+          <Field
+            id='name'
+            name='name'
+            type='text'
+            label='Name'
+            autoComplete='name'
+            value={name}
+            onChange={onChange}
+            placeholder='Jane Appleseed'
+            disabled={isLoading}
+            required
+          />
+          <Field
+            id='email'
+            name='email'
+            type='email'
+            label='Email'
+            autoComplete='email'
+            value={email}
+            onChange={onChange}
+            placeholder='name@example.com'
+            disabled={isLoading}
+            required
+          />
+          <PasswordField
+            id='password'
+            name='password'
+            label='Password'
+            autoComplete='new-password'
+            value={password}
+            onChange={onChange}
+            placeholder='Create a password'
+            disabled={isLoading}
+            required
+          />
+          <PasswordField
+            id='password2'
+            name='password2'
+            label='Confirm password'
+            autoComplete='new-password'
+            value={password2}
+            onChange={onChange}
+            placeholder='Type it again'
+            error={passwordsMismatch ? 'Passwords do not match.' : undefined}
+            disabled={isLoading}
+            required
+          />
+          <Button type='submit' size='lg' block loading={isLoading}>
+            Create account
+          </Button>
         </form>
-      </section>
-    </>
+
+        <p className='auth-footer'>
+          Already have an account? <Link to='/login'>Sign in</Link>
+        </p>
+      </Card>
+    </div>
   )
 }
 

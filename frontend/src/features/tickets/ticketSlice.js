@@ -71,6 +71,24 @@ export const getTicket = createAsyncThunk(
   }
 )
 
+// Update ticket status
+export const updateTicket = createAsyncThunk(
+  'tickets/update',
+  async ({ ticketId, status }, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await ticketService.updateTicket(ticketId, { status }, token)
+    } catch (err) {
+      console.log(err)
+      const message =
+        (err.response && err.response.data && err.response.data.message) ||
+        err.message ||
+        err.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 // Close Ticket
 export const closeTicket = createAsyncThunk(
   'tickets/close',
@@ -114,6 +132,8 @@ export const ticketSlice = createSlice({
       })
       .addCase(getTickets.pending, (state) => {
         state.isLoading = true
+        state.isError = false
+        state.message = ''
       })
       .addCase(getTickets.fulfilled, (state, action) => {
         state.isLoading = false
@@ -127,6 +147,8 @@ export const ticketSlice = createSlice({
       })
       .addCase(getTicket.pending, (state) => {
         state.isLoading = true
+        state.isError = false
+        state.message = ''
       })
       .addCase(getTicket.fulfilled, (state, action) => {
         state.isLoading = false
@@ -138,13 +160,36 @@ export const ticketSlice = createSlice({
         state.isError = true
         state.message = action.payload
       })
-      .addCase(closeTicket.fulfilled, (state, action) => {
+      .addCase(updateTicket.fulfilled, (state, action) => {
         state.isLoading = false
-        state.tickets.map((ticket) =>
+        state.isSuccess = true
+        state.ticket = action.payload
+        state.tickets = state.tickets.map((ticket) =>
           ticket._id === action.payload._id
-            ? (ticket.status = 'closed')
+            ? { ...ticket, status: action.payload.status }
             : ticket
         )
+      })
+      .addCase(updateTicket.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(closeTicket.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.ticket =
+          state.ticket._id === action.payload._id
+            ? { ...state.ticket, status: action.payload.status }
+            : state.ticket
+        state.tickets = state.tickets.map((ticket) =>
+          ticket._id === action.payload._id
+            ? { ...ticket, status: action.payload.status }
+            : ticket
+        )
+      })
+      .addCase(closeTicket.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
         state.message = action.payload
       })
   },
