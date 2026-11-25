@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Support Ticket Application",
   "main": "server.js",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "start": "node backend/server.js",
     "server": "nodemon backend/server.js",

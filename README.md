@@ -34,6 +34,14 @@ JWT_SECRET=your jwt secret
 GEMINI_API_KEY=your Google AI Studio Gemini API key
 ```
 
+### Render deploy
+
+- **Build command:** `npm run build`
+- **Start command:** `npm start`
+- **Node:** 22+ (repo includes `.node-version`; or set `NODE_VERSION=22` in Render)
+- Set env vars in the Render dashboard: `NODE_ENV=production`, `MONGO_URI`, `JWT_SECRET`, `GEMINI_API_KEY`
+- If start fails with exit code 1, check logs **above** the `ELIFECYCLE` line (often Mongo connection / missing `MONGO_URI`)
+
 ### Who do I talk to?
 
 - Repo owner [https://www.raisanjmr.in](https://www.raisanjmr.in)

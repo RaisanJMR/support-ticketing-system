@@ -1,5 +1,4 @@
 const asyncHandler = require('express-async-handler')
-const { runChat } = require('../ai/chat')
 
 // @desc    Staff AI chat (ticket summaries via Gemini tools)
 // @route   POST /api/ai/chat
@@ -35,6 +34,8 @@ const chat = asyncHandler(async (req, res) => {
     : []
 
   try {
+    // Lazy-load so a missing/ incompatible GenAI SDK does not crash boot
+    const { runChat } = require('../ai/chat')
     const result = await runChat({
       message: message.trim().slice(0, 4000),
       history: safeHistory,

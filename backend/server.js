@@ -6,6 +6,11 @@ const colors = require('colors')
 const connectDB = require('./config/db')
 const PORT = process.env.PORT || 5000
 
+if (!process.env.MONGO_URI) {
+  console.error('MONGO_URI is missing. Set it in the Render environment variables.')
+  process.exit(1)
+}
+
 // Connect to DB
 connectDB()
 
@@ -18,12 +23,14 @@ app.use(express.urlencoded({ extended: false }))
 app.use('/api/users', require('./routes/userRoutes'))
 app.use('/api/tickets', require('./routes/ticketRoutes'))
 app.use('/api/ai', require('./routes/aiRoutes'))
+
 // serve front end
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend/build')))
+  const buildPath = path.join(__dirname, '../frontend/build')
+  app.use(express.static(buildPath))
 
   app.get('*', (req, res) =>
-    res.sendFile(__dirname, '../', 'frontend', 'build', 'index.html')
+    res.sendFile(path.join(buildPath, 'index.html'))
   )
 } else {
   app.get('/', (req, res) => {
