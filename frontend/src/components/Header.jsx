@@ -5,6 +5,7 @@ import {
   IoAddCircleOutline,
   IoChatbubblesOutline,
   IoLogOutOutline,
+  IoSparklesOutline,
   IoTicketOutline,
 } from 'react-icons/io5'
 import { logout, reset } from '../features/auth/authSlice'
@@ -99,61 +100,76 @@ function Header() {
 
         <div className='site-header-actions'>
           {user ? (
-            <div className='user-menu' ref={menuRef}>
-              <button
-                ref={triggerRef}
-                type='button'
-                className='avatar-button'
-                aria-haspopup='true'
-                aria-expanded={menuOpen}
-                aria-controls='account-menu'
-                onClick={() => setMenuOpen((open) => !open)}>
-                <span className='avatar' aria-hidden='true'>
-                  {getInitials(user.name)}
-                </span>
-                <span className='visually-hidden'>
-                  Account menu for {user.name}
-                </span>
-              </button>
-
-              {menuOpen && (
-                <div className='menu' id='account-menu'>
-                  <div className='menu-profile'>
-                    <span className='avatar avatar-lg' aria-hidden='true'>
-                      {getInitials(user.name)}
-                    </span>
-                    <div>
-                      <p className='menu-name'>
-                        {user.name}
-                        {user.isAdmin && (
-                          <span className='badge badge-staff'>Staff</span>
-                        )}
-                      </p>
-                      <p className='menu-email'>{user.email}</p>
-                    </div>
-                  </div>
-                  <nav className='menu-nav' aria-label='Main'>
-                    {navLinks.map((link) => (
-                      <Link
-                        key={link.to}
-                        to={link.to}
-                        className={`menu-item${link.active ? ' is-active' : ''}`}
-                        aria-current={link.active ? 'page' : undefined}>
-                        {link.icon}
-                        {link.label}
-                      </Link>
-                    ))}
-                  </nav>
-                  <button
-                    type='button'
-                    className='menu-item menu-item-danger'
-                    onClick={onLogout}>
-                    <IoLogOutOutline aria-hidden='true' />
-                    Sign out
-                  </button>
-                </div>
+            <>
+              {user.isAdmin && (
+                <Link
+                  to='/ai'
+                  className={`ai-menu-trigger${
+                    location.pathname === '/ai' ? ' is-open' : ''
+                  }`}
+                  aria-current={location.pathname === '/ai' ? 'page' : undefined}>
+                  <IoSparklesOutline aria-hidden='true' />
+                  <span>AI</span>
+                </Link>
               )}
-            </div>
+              <div className='user-menu' ref={menuRef}>
+                <button
+                  ref={triggerRef}
+                  type='button'
+                  className='avatar-button'
+                  aria-haspopup='true'
+                  aria-expanded={menuOpen}
+                  aria-controls='account-menu'
+                  onClick={() => setMenuOpen((open) => !open)}>
+                  <span className='avatar' aria-hidden='true'>
+                    {getInitials(user.name)}
+                  </span>
+                  <span className='visually-hidden'>
+                    Account menu for {user.name}
+                  </span>
+                </button>
+
+                {menuOpen && (
+                  <div className='menu' id='account-menu'>
+                    <div className='menu-profile'>
+                      <span className='avatar avatar-lg' aria-hidden='true'>
+                        {getInitials(user.name)}
+                      </span>
+                      <div>
+                        <p className='menu-name'>
+                          {user.name}
+                          {user.isAdmin && (
+                            <span className='badge badge-staff'>Staff</span>
+                          )}
+                        </p>
+                        <p className='menu-email'>{user.email}</p>
+                      </div>
+                    </div>
+                    <nav className='menu-nav' aria-label='Main'>
+                      {navLinks.map((link) => (
+                        <Link
+                          key={link.to}
+                          to={link.to}
+                          className={`menu-item${
+                            link.active ? ' is-active' : ''
+                          }`}
+                          aria-current={link.active ? 'page' : undefined}>
+                          {link.icon}
+                          {link.label}
+                        </Link>
+                      ))}
+                    </nav>
+                    <button
+                      type='button'
+                      className='menu-item menu-item-danger'
+                      onClick={onLogout}>
+                      <IoLogOutOutline aria-hidden='true' />
+                      Sign out
+                    </button>
+                  </div>
+                )}
+              </div>
+            </>
           ) : (
             <>
               <NavLink

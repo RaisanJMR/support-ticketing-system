@@ -30,6 +30,8 @@ PORT=5000
 MONGO_URI=your mongo uri
 
 JWT_SECRET=your jwt secret
+
+GEMINI_API_KEY=your Google AI Studio Gemini API key
 ```
 
 ### Who do I talk to?
